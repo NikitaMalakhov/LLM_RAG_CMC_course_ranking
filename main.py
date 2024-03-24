@@ -22,6 +22,7 @@ def average_pool(last_hidden_states: Tensor,
     last_hidden = last_hidden_states.masked_fill(~attention_mask[..., None].bool(), 0.0)
     return last_hidden.sum(dim=1) / attention_mask.sum(dim=1)[..., None]
 
+
 def rank(sentence: str, k: int=5) -> List[str]:
     model.eval()
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
