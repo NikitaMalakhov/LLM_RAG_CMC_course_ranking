@@ -1,5 +1,4 @@
-from fastapi import FastAPI, Request
-from pydantic import BaseModel
+import streamlit as st
 
 from transformers import AutoModel, AutoTokenizer
 import torch
@@ -46,13 +45,12 @@ def rank(sentence: str, k: int=5) -> List[str]:
     sorted_scores = sorted(search_metrics.items(), key=lambda x: x[1], reverse=True)
     return [(sentence, score) for sentence, score in sorted_scores[:k]]
 
-app = FastAPI()
+st.title('Ранжировочная система')
 
+input_string = st.text_input('Запрос:')
 
-@app.post('/api')
-async def retrieve_queries(request: Request):
-    request = await request.json()
-    ranks = rank(request['query'], k=request['count'])
+if st.button('Найти'):
+    if input_string:
+        sentences = rank(input_string, k=5)
 
-    response = [{item[0]: item[1]} for item in ranks]
-    return response
+        st.write('Output: ', [k[0] for k in sentences])
